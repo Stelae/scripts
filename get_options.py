@@ -35,7 +35,8 @@ def get_options(cmd_full):
     
     for index in range(len(cmd_options)):
         if check_type(cmd_options[index]) == "key":
-            if index + 1 < len(cmd_options) and check_type(cmd_options[index+1]) == "value":
+            if index + 1 < len(cmd_options) and \
+                    check_type(cmd_options[index+1]) == "value":
                 options[get_key_name(cmd_options[index])] = cmd_options[index+1]
             else:
                 options[get_key_name(cmd_options[index])] = True

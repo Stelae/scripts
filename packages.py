@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#Short script that takes a text file containing a "messy" (copy-pasted from cli)
+#Short script that takes a text file containing a "messy" (pasted from cli)
 #list of installed packages and converts it to a neat list
 #Files must be in the directory of the script.
 

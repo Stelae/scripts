@@ -133,6 +133,7 @@ files = list()
 if recursive is False:
     files = files + os.listdir() #Only current dir
 else:
+    #Include subdirectories
     for (dirpath, dirnames, filenames) in os.walk(os.getcwd()):
         for filename in filenames:
             files.append(dirpath + "/" + filename)

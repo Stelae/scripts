@@ -53,7 +53,8 @@ for filename in files:
     #Write to temp file and replace original
     ########################################
     #FFMpeg parmeter explanation:
-    #-nostdin: non-interactive (because we are directing output to file, so questions would be invisible otherwise).
+    #-nostdin: non-interactive (because we are directing output to file,
+    #   so questions would be invisible otherwise).
     #-i [file]: input file
     #-map_metadata -1: removes all metadata (note: some metadata cannot be removed.
     #-c copy: make direct copy (no encoding)
@@ -62,7 +63,8 @@ for filename in files:
     
     ffmpeg_cmd = 'ffmpeg -nostdin -i "%(input_file)s" -map_metadata -1 -c copy \
     "%(output_file)s" >> ffmpeg_output.log 2>&1' % ffmpeg_parameters
-    #Note: Using double quotes around file names because if a filename contains a single quote (apostrophe), it causes an error.
+    #Note: Using double quotes around file names because if a filename contains
+    #a single quote (apostrophe), it causes an error.
 
     try:
         error = os.system(ffmpeg_cmd + " >> ffmpeg_output.log") #ffmpeg should return 0 if it worked

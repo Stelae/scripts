@@ -14,7 +14,8 @@ file_counter = 0 #Count files processed for reporting
 #Check if ffmpeg installed
 package = "ffmpeg"
 if which(package) is None:
-    print("Could not find", package, "in path. Please check that it is installed.")
+    print("Could not find", package,
+          "in path. Please check that it is installed.")
     print("No action taken")
     exit()
 
@@ -56,7 +57,8 @@ for filename in files:
     #-nostdin: non-interactive (because we are directing output to file,
     #   so questions would be invisible otherwise).
     #-i [file]: input file
-    #-map_metadata -1: removes all metadata (note: some metadata cannot be removed.
+    #-map_metadata -1: removes all metadata (note: some metadata cannot be
+    #   removed.
     #-c copy: make direct copy (no encoding)
     #-shortest: if streams have different length, crop to shortest
     ######################
@@ -67,7 +69,8 @@ for filename in files:
     #a single quote (apostrophe), it causes an error.
 
     try:
-        error = os.system(ffmpeg_cmd + " >> ffmpeg_output.log") #ffmpeg should return 0 if it worked
+        error = os.system(ffmpeg_cmd + " >> ffmpeg_output.log")
+        #ffmpeg should return 0 if it worked
     except:
         print("WARNING: Something went wrong when trying to execute ffmpeg on",
               filename

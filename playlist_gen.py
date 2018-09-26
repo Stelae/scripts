@@ -56,18 +56,22 @@ Playlist Generator v1.1
 -o [search_string]
 
     List only includes files with [search_string] in their names.
+    
 
+--recursive
+-r
+    Include subdirectories.
 
 --types
 -t
 
-    List known file extensions.
+    List known file extensions. Ignores other options except "help".
 
 
 --help
 -h
 
-    Print this help menu
+    Print this help menu. Ignores other options.
 
 '''
 
@@ -84,20 +88,27 @@ def print_help():
 grep_string = ""
 
 #Check for options
+
+recursive = False # Initialising variable
+
 if len(sys.argv) > 1:
     
     options = get_options(sys.argv)
-    
-    #Print known file types
-    if "types" in options or "t" in options:
-        known_file_types()
-        exit()
     
     #Print help
     if "help" in options or "h" in options:
         print_help()
         exit()
+
+    #Print known file types
+    if "types" in options or "t" in options:
+        known_file_types()
+        exit()
     
+    #Enable option to include subdirectories
+    if "recursive" in options or "r" in options:
+        recursive = True    
+
     
     #Short-option 'o' same as 'only'
     if "o" in options:
@@ -116,7 +127,16 @@ if len(sys.argv) > 1:
             
 
 #Get list of recognised files
-files = os.listdir() #Start by listing all files
+#
+#Start by listing all files
+files = list()
+if recursive is False:
+    files = files + os.listdir() #Only current dir
+else:
+    for (dirpath, dirnames, filenames) in os.walk(os.getcwd()):
+        for filename in filenames:
+            files.append(dirpath + "/" + filename)
+
 
 #Remove files that don't match selected types
 ind = 0

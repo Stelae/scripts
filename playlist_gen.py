@@ -3,6 +3,9 @@
 #If file exists, it's overwritten
 
 import os
+import sys
+
+from get_options import get_options
 
 #CONFIGURATION#
 ##################
@@ -26,8 +29,80 @@ playlist_name = os.getcwd().split("/")[-1] #Name of current directory
 outfile_prefix = "0-"
 
 
+#HELP
+###################
+#Help section
+
+help_brief = '''
+Playlist Generator v1.1
+=======================
+
+[no options]
+
+    Generate a playlist of known file types in the current directory
+
+
+--only [search_string]
+-o [search_string]
+
+    List only includes files with [search_string] in their names.
+
+
+--types
+-t
+
+    List known file extensions.
+
+
+--help
+-h
+
+    Print this help menu
+
+'''
+
+def print_help():
+    print(help_brief)
+
+###################
+
+
+
+
 #MAIN
 ###################
+grep_string = ""
+
+#Check for options
+if len(sys.argv) > 1:
+    
+    options = get_options(sys.argv)
+    
+    
+    if "only" in options:
+        try:
+            grep_string = options["only"]
+            playlist_name = grep_string.title() + "s"
+            del options["only"]
+        except:
+            print("Missing argument")
+            exit()
+            
+    if "help" in options:
+        print_help()
+        exit()
+
+        
+    
+    ##The "--only" option restricts the list to files with the option's argument in their name
+    #if sys.argv[1] == "--only" or sys.argv[1] == "-o":
+        #try:
+            #grep_string = str(sys.argv[2])
+            #playlist_name = grep_string.title() + "s"
+        #except:
+            #print("Missing argument")
+            #exit()
+            
 
 #Get list of recognised files
 files = os.listdir() #Start by listing all files
@@ -37,7 +112,7 @@ ind = 0
 while ind <= len(files) - 1:
     match = False #tracks whether file matched a known extension
     for file_ext in file_types:
-        if files[ind].endswith(file_ext):
+        if files[ind].endswith(file_ext) and grep_string in files[ind]:
             match = True
             ind = ind + 1
             break #go to next file in list
@@ -46,6 +121,11 @@ while ind <= len(files) - 1:
     if match == False: del files[ind]
     #(no need to change index because files  have shifted)        
     
+#If playlist is empty, exit with message
+if len(files) < 1:
+    print("\nWARNING: Playlist would be empty. No files generated.\n")
+    exit()
+
 
 #Sort files alphabetically, ignoring case
 files.sort(key=str.lower)

@@ -15,6 +15,15 @@ file_types.append(".mp4")
 file_types.append(".webm")
 file_types.append(".3gp")
 file_types.append(".mkv")
+file_types.append(".avi")
+
+#Function to list known file types
+def known_file_types():
+    print("Script currently looks for the following extensions:")
+    for type in file_types:
+        print(type)
+    print()
+        
 
 #Pre-fix
 prefix = "./"
@@ -33,7 +42,7 @@ outfile_prefix = "0-"
 ###################
 #Help section
 
-help_brief = '''
+help_full = '''
 Playlist Generator v1.1
 =======================
 
@@ -61,11 +70,11 @@ Playlist Generator v1.1
 
 '''
 
+#Print help 
 def print_help():
-    print(help_brief)
+    print(help_full)
 
 ###################
-
 
 
 
@@ -77,31 +86,34 @@ grep_string = ""
 if len(sys.argv) > 1:
     
     options = get_options(sys.argv)
+    print(options)
     
+    #Print known file types
+    if "types" in options or "t" in options:
+        print("Got here")
+        known_file_types()
+        exit()
+    
+    #Print help
+    if "help" in options or "h" in options:
+        print_help()
+        exit()
+    
+    
+    #Short-option 'o' same as 'only'
+    if "o" in options:
+        options["only"] = options["o"]
+        del options["o"]
     
     if "only" in options:
         try:
             grep_string = options["only"]
-            playlist_name = grep_string.title() + "s"
+            playlist_name = grep_string.title()
             del options["only"]
         except:
             print("Missing argument")
             exit()
-            
-    if "help" in options:
-        print_help()
-        exit()
-
         
-    
-    ##The "--only" option restricts the list to files with the option's argument in their name
-    #if sys.argv[1] == "--only" or sys.argv[1] == "-o":
-        #try:
-            #grep_string = str(sys.argv[2])
-            #playlist_name = grep_string.title() + "s"
-        #except:
-            #print("Missing argument")
-            #exit()
             
 
 #Get list of recognised files

@@ -19,11 +19,12 @@ file_types.append(".avi")
 
 #Function to list known file types
 def known_file_types():
-    print("Script currently looks for the following extensions:")
+    print(sys.argv[0],
+          "currently looks for the following extensions:")
     for type in file_types:
         print(type)
     print()
-        
+      
 
 #Pre-fix
 prefix = "./"
@@ -86,11 +87,9 @@ grep_string = ""
 if len(sys.argv) > 1:
     
     options = get_options(sys.argv)
-    print(options)
     
     #Print known file types
     if "types" in options or "t" in options:
-        print("Got here")
         known_file_types()
         exit()
     

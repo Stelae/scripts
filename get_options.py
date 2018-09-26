@@ -22,25 +22,23 @@ def get_key_name(option_key):
 
 
 
-def get_options(cmd):
+def get_options(cmd_full):
     
     options = dict()  
     
     #Check if cmd is given as list (sys.argv output)
-    if not type(cmd) is list:
+    if not type(cmd_full) is list:
         print("Unexpected argument type (expected 'list').")
         return options
     
-    del cmd[0] #drop the command itself from list of options
+    cmd_options =  cmd_full[1:] #drop the command itself from list of options
     
-    for index in range(len(cmd)):
-        if check_type(cmd[index]) == "key":
-            if index + 1 < len(cmd) and check_type(cmd[index+1]) == "value":
-                options[get_key_name(cmd[index])] = cmd[index+1]
+    for index in range(len(cmd_options)):
+        if check_type(cmd_options[index]) == "key":
+            if index + 1 < len(cmd_options) and check_type(cmd_options[index+1]) == "value":
+                options[get_key_name(cmd_options[index])] = cmd_options[index+1]
             else:
-                options[get_key_name(cmd[index])] = True
-    
-    
+                options[get_key_name(cmd_options[index])] = True
     
     
     return options

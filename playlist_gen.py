@@ -56,11 +56,21 @@ Playlist Generator v1.1
 -o [search_string]
 
     List only includes files with [search_string] in their names.
+    Is overriden by an "except" match.
     
+
+--except [search_string]
+-x [search_string]
+
+    List excludes files with [search_string] in their names.
+    Takes precedence over an "only" match.
+
 
 --recursive
 -r
+
     Include subdirectories.
+
 
 --types
 -t

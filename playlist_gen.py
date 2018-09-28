@@ -88,6 +88,7 @@ def print_help():
 grep_string_only = ""
 grep_string_x = "*"
 
+
 #Check for options
 
 recursive = False # Initialising variable
@@ -119,7 +120,9 @@ if len(sys.argv) > 1:
     if "only" in options:
         try:
             grep_string_only = options["only"]
-            playlist_name = grep_string_only.title()
+            if playlist_name != "":
+                playlist_name += "_"
+            playlist_name += grep_string_only
             del options["only"]
         except:
             print("Missing argument")
@@ -134,7 +137,9 @@ if len(sys.argv) > 1:
     if "except" in options:
         try:
             grep_string_x = options["except"]
-            playlist_name = "No_" + grep_string_x.title()
+            if playlist_name != "":
+                playlist_name += "_"
+            playlist_name += "No_" + grep_string_x
             del options["except"]
         except:
             print("Missing argument")

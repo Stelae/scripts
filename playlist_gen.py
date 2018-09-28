@@ -85,7 +85,8 @@ def print_help():
 
 #MAIN
 ###################
-grep_string = ""
+grep_string_only = ""
+grep_string_x = "*"
 
 #Check for options
 
@@ -117,9 +118,24 @@ if len(sys.argv) > 1:
     
     if "only" in options:
         try:
-            grep_string = options["only"]
-            playlist_name = grep_string.title()
+            grep_string_only = options["only"]
+            playlist_name = grep_string_only.title()
             del options["only"]
+        except:
+            print("Missing argument")
+            exit()
+            
+
+    #Short-option 'x' same as 'except'
+    if "x" in options:
+        options["except"] = options["x"]
+        del options["x"]
+    
+    if "except" in options:
+        try:
+            grep_string_x = options["except"]
+            playlist_name = "No_" + grep_string_x.title()
+            del options["except"]
         except:
             print("Missing argument")
             exit()
@@ -143,7 +159,8 @@ ind = 0
 while ind <= len(files) - 1:
     match = False #tracks whether file matched a known extension
     for file_ext in file_types:
-        if files[ind].endswith(file_ext) and grep_string in files[ind]:
+        if files[ind].endswith(file_ext) and (grep_string_only in files[ind] \
+            and grep_string_x not in files[ind]):
             match = True
             ind = ind + 1
             break #go to next file in list

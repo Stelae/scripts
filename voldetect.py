@@ -61,12 +61,14 @@ for file_ext in file_types:
 for file in files:
     
     ffmpeg_cmd = 'ffmpeg -nostdin -i "{0}" -af "volumedetect" \
-    -vn -sn -dn -f null /dev/null > "{0}.log" 2>&1'.format(file)
+    -vn -sn -dn -f null /dev/null > ".volumedetect.tmplog" 2>&1'.format(file)
     
     #cat_cmd = 'ls'
-    cat_cmd = 'cat "{0}.log" | grep "max_volume"'.format(file)
+    cat_cmd = 'cat ".volumedetect.tmplog" | grep "max_volume"'.format(file)
     #Note: Using double quotes around file names because if a filename contains
     #a single quote (apostrophe), it causes an error.
+    
+    del_cmd = 'rm ".volumedetect.tmplog"'.format(file)
 
 
     print('Processing "{0}"'.format(file))
@@ -83,6 +85,7 @@ for file in files:
         continue
     
     error = error + os.system(cat_cmd)
+    error = error + os.system(del_cmd)
 
     if error:
         print("WARNING: Error while processing", filename)
@@ -92,6 +95,7 @@ for file in files:
     else:
         file_counter = file_counter + 1
     
+     
     
     print("")
 

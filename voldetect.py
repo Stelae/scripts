@@ -49,10 +49,6 @@ for file_ext in file_types:
 files.sort(key=str.lower)
 
 
-#ffmpeg -i "Marsha May - Slut Puppies 10 (part 4).mp4" -af "volumedetect" -vn -sn -dn -f null /dev/null
-#ffmpeg -i "Chloe Amour - DP Masters 5 (part 3)" -af "volumedetect" -vn -sn -dn -f null /dev/null
-
-
 ########################################
 #FFMpeg parmeter explanation:
 #-nostdin: non-interactive (because we are directing output to file,

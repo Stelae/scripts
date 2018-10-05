@@ -21,11 +21,17 @@ if which(package) is None:
 ##################
 #Make adjustments here to control the file types included
 file_types = list()
+
+#Video formats
 file_types.append(".mp4")
 file_types.append(".webm")
 file_types.append(".3gp")
 file_types.append(".mkv")
 file_types.append(".avi")
+
+#Audio formats
+file_types.append(".mp3")
+
 
 
 #MAIN#
@@ -38,6 +44,9 @@ for file_ext in file_types:
     for filename in all_files:
         if filename.endswith(file_ext):
             files.append(filename)
+            
+#Alphabetical, case-insensitive sorting of file list
+files.sort(key=str.lower)
 
 
 #ffmpeg -i "Marsha May - Slut Puppies 10 (part 4).mp4" -af "volumedetect" -vn -sn -dn -f null /dev/null

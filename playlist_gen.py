@@ -17,15 +17,6 @@ file_types.append(".3gp")
 file_types.append(".mkv")
 file_types.append(".avi")
 
-#Function to list known file types
-def known_file_types():
-    print(sys.argv[0],
-          "currently looks for the following extensions:")
-    for type in file_types:
-        print(type)
-    print()
-      
-
 #Pre-fix
 prefix = "./"
 
@@ -84,6 +75,18 @@ Playlist Generator v1.1
     Print this help menu. Ignores other options.
 
 '''
+
+
+#HELPER FUNCTIONS
+###################
+
+#Function to list known file types
+def known_file_types():
+    print(sys.argv[0],
+          "currently looks for the following extensions:")
+    for type in file_types:
+        print(type)
+    print()
 
 #Print help 
 def print_help():
@@ -170,7 +173,7 @@ else:
             files.append(dirpath + "/" + filename)
 
 
-#Remove files that don't match selected types
+#Remove files that don't match selected types or filters
 ind = 0
 while ind <= len(files) - 1:
     match = False #tracks whether file matched a known extension

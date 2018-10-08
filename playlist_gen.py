@@ -47,14 +47,14 @@ Playlist Generator v1.1
 -o [search_string]
 
     List only includes files with [search_string] in their names.
-    Is overriden by an "except" match.
+    Case insensitive. Is overriden by an "except" match.
     
 
 --except [search_string]
 -x [search_string]
 
     List excludes files with [search_string] in their names.
-    Takes precedence over an "only" match.
+    Case insensitive. Takes precedence over an "only" match.
 
 
 --recursive
@@ -178,8 +178,10 @@ ind = 0
 while ind <= len(files) - 1:
     match = False #tracks whether file matched a known extension
     for file_ext in file_types:
-        if files[ind].endswith(file_ext) and (grep_string_only in files[ind] \
-            and grep_string_x not in files[ind]):
+        if files[ind].endswith(file_ext) \
+            and grep_string_only.casefold() in files[ind].casefold() \
+            and grep_string_x.casefold() not in files[ind].casefold():
+            #Note: casefolded strings are used for caseless matching
             match = True
             ind = ind + 1
             break #go to next file in list

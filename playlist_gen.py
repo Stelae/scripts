@@ -82,7 +82,12 @@ Playlist Generator v1.1
 
 #Function to list known file types
 def known_file_types():
-    print(sys.argv[0],
+    
+    #Get script name
+    script_name = os.path.split(sys.argv[0].rstrip("/"))[-1]
+    
+    print("")
+    print(script_name,
           "currently looks for the following extensions:")
     for type in file_types:
         print(type)

@@ -55,7 +55,12 @@ Rename file in m3u
 
 #Function to list known file types
 def known_file_types():
-    print(sys.argv[0],
+    
+    #Get script name
+    script_name = os.path.split(sys.argv[0].rstrip("/"))[-1]
+    
+    print("")
+    print(script_name,
           "currently updates the following file types:")
     for type in file_types:
         print(type)

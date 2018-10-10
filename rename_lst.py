@@ -129,6 +129,8 @@ old_str = options["old"]
 new_str = options["new"]
             
 
+#Counter for changes
+changes_counter = 0
 
 #Get list of recognised files
 #
@@ -166,6 +168,7 @@ for file in files:
     
     with open(file, "r") as fin:
         for line in fin:
+            changes_counter += line.count(old_str)
             line = line.replace(old_str, new_str)
             fout.write(line)
 
@@ -176,6 +179,7 @@ for file in files:
 
 #Report
 print("Processed", len(files), "file(s).")
+print("Made", changes_counter, "change(s).")
 
     
     

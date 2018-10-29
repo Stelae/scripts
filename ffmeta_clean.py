@@ -8,6 +8,16 @@
 import os
 from shutil import which
 
+#CONFIGURATION#
+##################
+#Make adjustments here to control the file types included
+file_types = list()
+file_types.append(".mp4")
+file_types.append(".avi")
+
+
+#MAIN
+###################
 warn_counter = 0 #Count warnings for reporting
 file_counter = 0 #Count files processed for reporting
 
@@ -20,18 +30,22 @@ if which(package) is None:
     exit()
 
 
-#Get list of mp4 files
-file_ext = ".mp4"
-files = [] #list of mp4 files
-all_files = os.listdir()
-for filename in all_files:
-    if filename.endswith(file_ext):
-        files.append(filename)
-        
-#del all_files #Note: patchwork to fix bug
+#Get list of recognised files
+files = list()
+for file_ext in file_types:
+    all_files = os.listdir()
+    for filename in all_files:
+        if filename.endswith(file_ext):
+            files.append(filename)
+            
+#Alphabetical, case-insensitive sorting of file list
+files.sort(key=str.lower)
 
+#If playlist is empty, exit with message
 if len(files) < 1:
-    print("WARNING: No", file_ext, "files have been found.")
+    print("\nWARNING: No recognised files have been found.\n")
+    exit()
+
 
 
 #Run ffmpeg to strip metadata for each file, but don't overwrite existing files

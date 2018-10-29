@@ -13,8 +13,6 @@ from shutil import which
 #Make adjustments here to control the file types included
 file_types = list()
 file_types.append(".mp4")
-file_types.append(".mkv")
-
 
 
 

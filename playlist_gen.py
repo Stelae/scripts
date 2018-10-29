@@ -16,6 +16,7 @@ file_types.append(".webm")
 file_types.append(".3gp")
 file_types.append(".mkv")
 file_types.append(".avi")
+file_types.append("mpg")
 file_types.append(".MOD")
 
 #Pre-fix

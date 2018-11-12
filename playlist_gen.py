@@ -187,7 +187,10 @@ if len(sys.argv) > 1:
             assert type(sort_argument) is str or sort_argument in [1,2]
         except:
             print("Invalid or missing 'sort' argument.")
-            exit() 
+            exit()
+    else:
+        #default sort option
+        sort_argument = 1
 
 else:
     #default sort option if nothing passed

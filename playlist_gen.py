@@ -250,7 +250,7 @@ elif sort_argument == 2:
 #Sort based on provided substring
 else:
     #Remove files not matching sort_argument
-    for ind in range(len(files)-1,0,-1):
+    for ind in range(len(files)-1,-1,-1):
         if sort_argument not in files[ind]:
             del files[ind]
     

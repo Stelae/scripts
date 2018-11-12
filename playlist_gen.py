@@ -35,43 +35,44 @@ outfile_prefix = "0-"
 #Help section
 
 help_full = '''
-Playlist Generator v1.1
+Playlist Generator v1.1.1 (2018-11-11)
 =======================
+Generate a playlist of known file types in the current directory
 
-[no options]
+Usage:
+    playlist_gen.py [ OPTIONS ]
 
-    Generate a playlist of known file types in the current directory
 
+OPTIONS
 
---only [search_string]
--o [search_string]
-
-    List only includes files with [search_string] in their names.
+--only search_string
+-o search_string
+    List only includes files with search_string in their names.
     Case insensitive. Is overriden by an "except" match.
     
-
---except [search_string]
--x [search_string]
-
-    List excludes files with [search_string] in their names.
+--except search_string
+-x search_string
+    List excludes files with search_string in their names.
     Case insensitive. Takes precedence over an "only" match.
 
-
+--sort sort_argument
+-s sort_argument
+    If sort_argument is string, sorting ignores part of filename up to sort_argument.
+    Ignores filenames that do not contain sort_argument.
+    If sort_argument is defined integer, sorting works as follows:
+        1: regular alphabetical sorting (default)
+        2: alphabetical sorting starting from end of filename.
+    
 --recursive
 -r
-
     Include subdirectories.
-
 
 --types
 -t
-
     List known file extensions. Ignores other options except "help".
-
 
 --help
 -h
-
     Print this help menu. Ignores other options.
 
 '''
@@ -92,6 +93,7 @@ def known_file_types():
     for type in file_types:
         print(type)
     print()
+
 
 #Print help 
 def print_help():
@@ -162,8 +164,32 @@ if len(sys.argv) > 1:
         except:
             print("Missing argument")
             exit()
-        
+ 
+
+    #Short-option 's' same as 'sort'
+    if "s" in options:
+        options["sort"] = options["s"]
+        del options["s"]
+    
+    if "sort" in options:        
+        try:
+            sort_argument = options["sort"]
+            del options["sort"]
             
+            #Convert integer arguments to int type
+            try:
+                sort_argument = int(sort_argument)
+            except:
+                pass
+            
+            assert type(sort_argument) is str or sort_argument in [1,2]
+        except:
+            print("Invalid or missing 'sort' argument.")
+            exit() 
+    else:
+        #default sort option
+        sort_argument == 1
+ 
 
 #Get list of recognised files
 #
@@ -201,8 +227,39 @@ if len(files) < 1:
     exit()
 
 
+#SORTING
+
 #Sort files alphabetically, ignoring case
-files.sort(key=str.lower)
+if sort_argument == 1:
+    #Sort files alphabetically, ignoring case
+    files.sort(key=str.lower)
+
+#Sort files alphabetically from end of filename, ignoring case.
+elif sort_argument == 2:
+    
+    #Define sorting key
+    def reverse_str(forward_string):
+        return forward_string[::-1].lower()
+    
+    #Do sorting based on defined key
+    files.sort(key=reverse_str)
+
+#Sort based on provided substring
+else:
+    #Remove files not matching sort_argument
+    for ind in range(len(files)-1,0,-1):
+        if sort_argument not in files[ind]:
+            del files[ind]
+    
+    #Define sorting key
+    #(ignores part before sort_argument)
+    def partial_str(full_string):
+        pos = full_string.index(sort_argument)
+        return full_string[pos:]
+    
+    #Do sorting based on defined key
+    files.sort(key=partial_str)
+
 
 #Write list to file
 playlist_name = playlist_name + "." + playlist_ext #add extension

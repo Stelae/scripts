@@ -188,9 +188,10 @@ if len(sys.argv) > 1:
         except:
             print("Invalid or missing 'sort' argument.")
             exit() 
-    else:
-        #default sort option
-        sort_argument == 1
+
+else:
+    #default sort option if nothing passed
+    sort_argument = 1
  
 
 #Get list of recognised files

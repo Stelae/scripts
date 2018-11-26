@@ -16,6 +16,8 @@ file_types.append(".webm")
 file_types.append(".3gp")
 file_types.append(".mkv")
 file_types.append(".avi")
+file_types.append("mpg")
+file_types.append(".MOD")
 
 #Pre-fix
 prefix = "./"
@@ -185,10 +187,14 @@ if len(sys.argv) > 1:
             assert type(sort_argument) is str or sort_argument in [1,2]
         except:
             print("Invalid or missing 'sort' argument.")
-            exit() 
+            exit()
     else:
         #default sort option
-        sort_argument == 1
+        sort_argument = 1
+
+else:
+    #default sort option if nothing passed
+    sort_argument = 1
  
 
 #Get list of recognised files
@@ -247,7 +253,7 @@ elif sort_argument == 2:
 #Sort based on provided substring
 else:
     #Remove files not matching sort_argument
-    for ind in range(len(files)-1,0,-1):
+    for ind in range(len(files)-1,-1,-1):
         if sort_argument not in files[ind]:
             del files[ind]
     

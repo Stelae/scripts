@@ -174,6 +174,8 @@ for file in files:
     with open(file, "r") as fin:
         for line in fin:
             changes_counter += line.count(old_str)
+            if line.count(old_str) > 0:
+                print("Changing file: {}".format(file))
             line = line.replace(old_str, new_str)
             fout.write(line)
 
@@ -183,6 +185,7 @@ for file in files:
 
 
 #Report
+print("====Report====")
 print("Processed", len(files), "file(s).")
 print("Made", changes_counter, "change(s).")
 

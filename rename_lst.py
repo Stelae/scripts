@@ -73,7 +73,8 @@ def print_help():
 ###################
 
 
-#Check for options
+##OPTIONS HANDLING
+###################
 
 recursive = False # Initialising variable
 
@@ -130,9 +131,20 @@ if type(options["old"]) is not str or type(options["new"]) is not str:
     print("Missing or invalid argument.\nUse the '--help' option.")
     exit()
 
+#Fail and exit if either string is empty or just whitespace.
+
+
 old_str = options["old"]
 new_str = options["new"]
-            
+
+if old_str.strip() == "" or new_str.strip() == "":
+    print("ERROR: If either target_string or new_string are blank or whitespace-only,")
+    print("it could lead to unexpected results. Aborting operation with no changes.\n")
+    exit()
+
+
+        
+###################
 
 #Counter for changes
 changes_counter = 0

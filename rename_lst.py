@@ -184,10 +184,15 @@ for file in files:
     fout = open(temp_file, "w")
     
     with open(file, "r") as fin:
+        
+        changed_file_was_reported = False
+        
         for line in fin:
             changes_counter += line.count(old_str)
-            if line.count(old_str) > 0:
+            if changed_file_was_reported is False and line.count(old_str) > 0:
                 print("Changing file: {}".format(file))
+                changed_file_was_reported = True
+                
             line = line.replace(old_str, new_str)
             fout.write(line)
 

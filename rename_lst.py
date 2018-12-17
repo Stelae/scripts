@@ -148,6 +148,7 @@ if old_str.strip() == "" or new_str.strip() == "":
 
 #Counter for changes
 changes_counter = 0
+changed_files_counter = 0
 
 #Get list of recognised files
 #
@@ -179,8 +180,9 @@ while ind <= len(files) - 1:
             
 #Go through listed files and make the changes
 for file in files:
-    temp_file = file + ".tmp"
+    this_file_changed = False
     
+    temp_file = file + ".tmp"    
     fout = open(temp_file, "w")
     
     with open(file, "r") as fin:
@@ -192,19 +194,23 @@ for file in files:
             if changed_file_was_reported is False and line.count(old_str) > 0:
                 print("Changing file: {}".format(file))
                 changed_file_was_reported = True
+                this_file_changed = True
                 
             line = line.replace(old_str, new_str)
             fout.write(line)
 
     fout.close()
 
-    os.replace(temp_file, file)
+    if this_file_changed is True:
+        os.replace(temp_file, file)
+        changed_files_counter += 1
+    else:
+        os.remove(temp_file)
 
 
 #Report
 print("====Report====")
-print("Processed", len(files), "file(s).")
-print("Made", changes_counter, "change(s).")
-
+print("Processed {} file(s).".format(len(files)) )
+print("Made {} change(s) in {} file(s).".format(changes_counter, changed_files_counter))
     
     

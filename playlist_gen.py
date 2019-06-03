@@ -274,8 +274,13 @@ if outfile_prefix: #add prefix to file name if it exists
 
 fout = open(playlist_name, "w") #Overwrite
 
-for filename in files:
+for i, filename in enumerate(files):
     filepath = os.path.relpath(filename, "./")
-    fout.write(prefix + filepath + "\r\n")
+    
+    # Skip line-return if last entry in list
+    if i is len(files) - 1:
+        fout.write(prefix + filepath)
+    else:
+        fout.write(prefix + filepath + "\r\n")
 
 fout.close()

@@ -155,7 +155,7 @@ changed_files_counter = 0
 #Start by listing all files
 files = list()
 if recursive is False:
-    files = files + os.listdir() #Only current dir
+    files = files + os.listdir(os.getcwd()) #Only current dir
 else:
     #Include subdirectories
     for (dirpath, dirnames, filenames) in os.walk(os.getcwd()):

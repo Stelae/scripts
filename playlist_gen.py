@@ -20,12 +20,10 @@ file_types.append("mpg")
 file_types.append(".MOD")
 
 #Pre-fix
-prefix = "./"
+prefix = ""
 
 #Output file
-#playlist_name = "playlist"
 playlist_ext = "m3u"
-playlist_name = os.getcwd().split("/")[-1] #Name of current directory
 
 #Output file prefix (to bring to top of files).
 #Comment out to disable the prefix.
@@ -73,6 +71,9 @@ OPTIONS
 -f filename_string
     Uses filename_string for name of output file instead of automatically-generated name.
 
+--path root_dir
+-p root_path
+    Uses root_dir as the root directory for the list instead of current directory.
 
 --types
 -t
@@ -200,26 +201,38 @@ if len(sys.argv) > 1:
         sort_argument = 1
 
 
-    # Short option 'f' same as 'filename
+    # Short option 'f' same as 'filename'
     if "f" in options:
         options["filename"] = options["f"]
         del options["f"]
 
+    # Short option 'p' same as 'path'
+    if "p" in options:
+        options["path"] = options["p"]
+        del options["p"]
 
 else:
     #default sort option if nothing passed
     sort_argument = 1
  
 
-#Get list of recognised files
-#
+# Get list of recognised files
+# ############################
+
+# Define starting directory
+if "path" in options:
+    root_dir = options["path"]
+else:
+    root_dir = os.path.relpath(os.getcwd())
+
+
 #Start by listing all files
 files = list()
 if recursive is False:
-    files = files + os.listdir() #Only current dir
+    files = files + os.listdir(root_dir) #Only current dir
 else:
     #Include subdirectories
-    for (dirpath, dirnames, filenames) in os.walk(os.getcwd()):
+    for (dirpath, dirnames, filenames) in os.walk(root_dir):
         for filename in filenames:
             files.append(dirpath + "/" + filename)
 
@@ -288,6 +301,9 @@ else:
 if "filename" in options and options["filename"] != "" :
     outfile_prefix = "" # ignore prefix if filename specified
     playlist_name = options["filename"]
+else:
+    playlist_name = root_dir.split("/")[-1] #Name of current directory
+
 
 playlist_name = playlist_name + "." + playlist_ext #add extension
 if outfile_prefix: #add prefix to file name if it exists
@@ -306,7 +322,9 @@ fout.write(comment)
 # ##################
 
 for i, filename in enumerate(files):
-    filepath = os.path.relpath(filename, "./")
+    filepath = filename
+    if "recursive" not in options:
+        filepath = os.path.relpath(root_dir) + "/" + filename
     
     # Skip line-return if last entry in list
     if i is len(files) - 1:

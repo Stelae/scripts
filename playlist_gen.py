@@ -69,6 +69,11 @@ OPTIONS
 -r
     Include subdirectories.
 
+--filename filename_string
+-f filename_string
+    Uses filename_string for name of output file instead of automatically-generated name.
+
+
 --types
 -t
     List known file extensions. Ignores other options except "help".
@@ -111,7 +116,9 @@ grep_string_only = ""
 grep_string_x = "*"
 
 
+
 #Check for options
+options = {}
 
 recursive = False # Initialising variable
 
@@ -192,6 +199,13 @@ if len(sys.argv) > 1:
         #default sort option
         sort_argument = 1
 
+
+    # Short option 'f' same as 'filename
+    if "f" in options:
+        options["filename"] = options["f"]
+        del options["f"]
+
+
 else:
     #default sort option if nothing passed
     sort_argument = 1
@@ -267,12 +281,29 @@ else:
     files.sort(key=partial_str)
 
 
-#Write list to file
+# Output file
+# ###################
+
+# Force filename if passed as an option:
+if "filename" in options and options["filename"] != "" :
+    outfile_prefix = "" # ignore prefix if filename specified
+    playlist_name = options["filename"]
+
 playlist_name = playlist_name + "." + playlist_ext #add extension
 if outfile_prefix: #add prefix to file name if it exists
     playlist_name = outfile_prefix + playlist_name
 
+
 fout = open(playlist_name, "w") #Overwrite
+
+# Save used command as comment in output file
+command_used = " ".join(sys.argv)
+comment = "# Output of: " + command_used + "\r\n"
+fout.write(comment)
+
+
+# Write list to file
+# ##################
 
 for i, filename in enumerate(files):
     filepath = os.path.relpath(filename, "./")

@@ -125,7 +125,14 @@ recursive = False # Initialising variable
 
 if len(sys.argv) > 1:
     
+    # Modifier string to attach to name of output file
+    name_modifiers = "" 
+
     options = get_options(sys.argv)
+    ## FOR TESTING
+    #for option in options:
+        #argument = options[option]
+        #print(option, ": ", argument)
     
     #Print help
     if "help" in options or "h" in options:
@@ -150,12 +157,11 @@ if len(sys.argv) > 1:
     if "only" in options:
         try:
             grep_string_only = options["only"]
-            if playlist_name != "":
-                playlist_name += "_"
-            playlist_name += grep_string_only
+            name_modifiers += "_"
+            name_modifiers += grep_string_only
             del options["only"]
         except:
-            print("Missing argument")
+            print("Missing 'only' argument")
             exit()
             
 
@@ -167,12 +173,11 @@ if len(sys.argv) > 1:
     if "except" in options:
         try:
             grep_string_x = options["except"]
-            if playlist_name != "":
-                playlist_name += "_"
-            playlist_name += "No_" + grep_string_x
+            name_modifiers += "_"
+            name_modifiers += "No_" + grep_string_x
             del options["except"]
         except:
-            print("Missing argument")
+            print("Missing 'except' argument")
             exit()
  
 
@@ -300,16 +305,17 @@ else:
 # Force filename if passed as an option:
 if "filename" in options and options["filename"] != "" :
     outfile_prefix = "" # ignore prefix if filename specified
+    name_modifiers = "" # ignore modifiers if filename specified
     playlist_name = options["filename"]
 else:
     playlist_name = root_dir.split("/")[-1] #Name of current directory
 
 
-playlist_name = playlist_name + "." + playlist_ext #add extension
+playlist_name = playlist_name + name_modifiers + "." + playlist_ext #add extension
 if outfile_prefix: #add prefix to file name if it exists
     playlist_name = outfile_prefix + playlist_name
 
-
+print(playlist_name)
 fout = open(playlist_name, "w") #Overwrite
 
 # Save used command as comment in output file

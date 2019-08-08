@@ -315,7 +315,6 @@ playlist_name = playlist_name + name_modifiers + "." + playlist_ext #add extensi
 if outfile_prefix: #add prefix to file name if it exists
     playlist_name = outfile_prefix + playlist_name
 
-print(playlist_name)
 fout = open(playlist_name, "w") #Overwrite
 
 # Save used command as comment in output file

@@ -113,9 +113,11 @@ def print_help():
 
 #MAIN
 ###################
+
+# Initialising variables
 grep_string_only = ""
 grep_string_x = "*"
-
+name_modifiers = "" # Modifier string to attach to name of output file
 
 
 #Check for options
@@ -125,9 +127,6 @@ recursive = False # Initialising variable
 
 if len(sys.argv) > 1:
     
-    # Modifier string to attach to name of output file
-    name_modifiers = "" 
-
     options = get_options(sys.argv)
     ## FOR TESTING
     #for option in options:
@@ -228,7 +227,7 @@ else:
 if "path" in options:
     root_dir = options["path"]
 else:
-    root_dir = os.path.relpath(os.getcwd())
+    root_dir = os.path.abspath(os.getcwd())
 
 
 #Start by listing all files

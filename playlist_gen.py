@@ -227,7 +227,7 @@ else:
 if "path" in options:
     root_dir = options["path"]
 else:
-    root_dir = os.path.abspath(os.getcwd())
+    root_dir = os.path.relpath(os.getcwd())
 
 
 #Start by listing all files
@@ -307,7 +307,7 @@ if "filename" in options and options["filename"] != "" :
     name_modifiers = "" # ignore modifiers if filename specified
     playlist_name = options["filename"]
 else:
-    playlist_name = root_dir.split("/")[-1] #Name of current directory
+    playlist_name = os.path.split(os.getcwd())[-1] #Name of current directory
 
 
 playlist_name = playlist_name + name_modifiers + "." + playlist_ext #add extension

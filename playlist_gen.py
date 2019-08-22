@@ -93,7 +93,7 @@ OPTIONS
 def known_file_types():
     
     #Get script name
-    script_name = os.path.split(sys.argv[0].rstrip("/"))[-1]
+    script_name = os.path.split(sys.argv[0].rstrip(os.sep))[-1]
     
     print("")
     print(script_name,
@@ -238,7 +238,7 @@ else:
     #Include subdirectories
     for (dirpath, dirnames, filenames) in os.walk(root_dir):
         for filename in filenames:
-            files.append(dirpath + "/" + filename)
+            files.append(dirpath + os.sep + filename)
 
 
 #Remove files that don't match selected types or filters
@@ -328,7 +328,7 @@ fout.write(comment)
 for i, filename in enumerate(files):
     filepath = filename
     if "recursive" not in options:
-        filepath = os.path.relpath(root_dir) + "/" + filename
+        filepath = os.path.relpath(root_dir) + os.sep + filename
     
     # Skip line-return if last entry in list
     if i is len(files) - 1:

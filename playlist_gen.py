@@ -29,6 +29,10 @@ playlist_ext = "m3u"
 #Comment out to disable the prefix.
 outfile_prefix = "0-"
 
+# Recognised logical operators
+bool_and = "++"
+bool_or = "||"
+
 
 #HELP
 ###################
@@ -54,6 +58,8 @@ OPTIONS
 -x search_string
     List excludes files with search_string in their names.
     Case insensitive. Takes precedence over an "only" match.
+
+NOTE: search_string accepts the boolean operators ++ (AND) and || (OR).
 
 --sort sort_argument
 -s sort_argument
@@ -107,6 +113,20 @@ def known_file_types():
 def print_help():
     print(help_full)
 
+
+
+def matches_AND_list(AND_list, text):
+    # Checks if all terms in list appear in text
+
+    final_result = True
+
+
+    for item in AND_list:
+        this_result =  item.strip().casefold() in text.casefold()
+        final_result = final_result and this_result
+
+    return final_result
+        
 ###################
 
 
@@ -115,7 +135,7 @@ def print_help():
 ###################
 
 # Initialising variables
-grep_string_only = ""
+grep_string_only = list()
 grep_string_x = "*"
 name_modifiers = "" # Modifier string to attach to name of output file
 
@@ -155,13 +175,14 @@ if len(sys.argv) > 1:
     
     if "only" in options:
         try:
-            grep_string_only = options["only"]
+            grep_string_only = options["only"].split(bool_and)
             name_modifiers += "_"
-            name_modifiers += grep_string_only
+            name_modifiers += " and" .join(grep_string_only)
             del options["only"]
         except:
             print("Missing 'only' argument")
             exit()
+
             
 
     #Short-option 'x' same as 'except'
@@ -247,7 +268,7 @@ while ind <= len(files) - 1:
     match = False #tracks whether file matched a known extension
     for file_ext in file_types:
         if files[ind].endswith(file_ext) \
-            and grep_string_only.casefold() in files[ind].casefold() \
+            and matches_AND_list(grep_string_only, files[ind]) \
             and grep_string_x.casefold() not in files[ind].casefold():
             #Note: casefolded strings are used for caseless matching
             match = True

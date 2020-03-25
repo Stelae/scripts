@@ -7,10 +7,12 @@ import sys
 
 from get_options import get_options
 
-#CONFIGURATION#
-##################
-#Make adjustments here to control the file types included
+# CONFIGURATION#
+# #################
+
+# Make adjustments here to control the file types included
 file_types = list()
+# Video types
 file_types.append(".mp4")
 file_types.append(".webm")
 file_types.append(".3gp")
@@ -18,6 +20,9 @@ file_types.append(".mkv")
 file_types.append(".avi")
 file_types.append("mpg")
 file_types.append(".MOD")
+## Audio types
+#file_types.append(".mp3")
+#file_types.append(".wav")
 
 #Pre-fix
 prefix = ""

@@ -146,9 +146,10 @@ if old_str.strip() == "" or new_str.strip() == "":
         
 ###################
 
-#Counter for changes
+#Counters for changes etc
 changes_counter = 0
 changed_files_counter = 0
+warnings_counter = 0
 
 #Get list of recognised files
 #
@@ -185,21 +186,26 @@ for file in files:
     temp_file = file + ".tmp"    
     fout = open(temp_file, "w")
     
-    with open(file, "r") as fin:
-        
-        changed_file_was_reported = False
-        
-        for line in fin:
-            changes_counter += line.count(old_str)
-            if changed_file_was_reported is False and line.count(old_str) > 0:
-                print("Changing file: {}".format(file))
-                changed_file_was_reported = True
-                this_file_changed = True
-                
-            line = line.replace(old_str, new_str)
-            fout.write(line)
+    try:
+        with open(file, "r") as fin:
+            
+            changed_file_was_reported = False
 
-    fout.close()
+            for line in fin:
+                changes_counter += line.count(old_str)
+                if changed_file_was_reported is False and line.count(old_str) > 0:
+                    print("Changing file: {}".format(file))
+                    changed_file_was_reported = True
+                    this_file_changed = True
+                    
+                line = line.replace(old_str, new_str)
+                fout.write(line)
+
+        fout.close()
+    except:
+        # when there's a problem opening/reading file
+        print("WARNING: Problem with file {}".format(file))
+        warnings_counter += 1
 
     if this_file_changed is True:
         os.replace(temp_file, file)
@@ -210,7 +216,9 @@ for file in files:
 
 #Report
 print("====Report====")
+if warnings_counter > 0: print("Got {} warning(s)".format(warnings_counter))
 print("Processed {} file(s).".format(len(files)) )
 print("Made {} change(s) in {} file(s).".format(changes_counter, changed_files_counter))
+
     
     

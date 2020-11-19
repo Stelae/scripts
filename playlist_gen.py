@@ -355,11 +355,7 @@ for i, filename in enumerate(files):
     filepath = filename
     if "recursive" not in options:
         filepath = os.path.relpath(root_dir) + os.sep + filename
-    
-    # Skip line-return if last entry in list
-    if i is len(files) - 1:
-        fout.write(prefix + filepath)
-    else:
-        fout.write(prefix + filepath + "\r\n")
+
+    fout.write(prefix + filepath + "\r\n")
 
 fout.close()

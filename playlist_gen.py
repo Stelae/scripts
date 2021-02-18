@@ -2,50 +2,13 @@
 #Generate a playlist for VLC from the relevant files in the folder
 #If file exists, it's overwritten
 
-import os
-import sys
-
-from get_options import get_options
-
-# CONFIGURATION#
-# #################
-
-# Make adjustments here to control the file types included
-file_types = list()
-# Video types
-file_types.append(".mp4")
-file_types.append(".webm")
-file_types.append(".3gp")
-file_types.append(".mkv")
-file_types.append(".avi")
-file_types.append("mpg")
-file_types.append(".MOD")
-## Audio types
-#file_types.append(".mp3")
-#file_types.append(".wav")
-
-#Pre-fix
-prefix = ""
-
-#Output file
-playlist_ext = "m3u"
-
-#Output file prefix (to bring to top of files).
-#Comment out to disable the prefix.
-outfile_prefix = "0-"
-
-# Recognised logical operators
-bool_and = "++"
-bool_or = "||"
-
-
 #HELP
 ###################
 #Help section
 
 help_full = '''
-Playlist Generator v1.1.1 (2018-11-11)
-=======================
+Playlist Generator v1.1.2 (2021-02-18)
+=======================================
 Generate a playlist of known file types in the current directory
 
 Usage:
@@ -64,7 +27,13 @@ OPTIONS
     List excludes files with search_string in their names.
     Case insensitive. Takes precedence over an "only" match.
 
-NOTE: search_string accepts the boolean operators ++ (AND) and || (OR).
+NOTE: search_string accepts the boolean operator ++ (AND).
+
+--regex regex_string
+-e regex_string
+    More sophisticated filter that accepts regular expressions.
+    Case sensitive.
+
 
 --sort sort_argument
 -s sort_argument
@@ -96,6 +65,54 @@ NOTE: search_string accepts the boolean operators ++ (AND) and || (OR).
 
 '''
 
+__doc__ = help_full
+
+
+#  DEPENDENCIES
+################
+
+import os
+import sys
+import re
+
+from get_options import get_options
+
+
+
+# CONFIGURATION#
+# #################
+
+# Make adjustments here to control the file types included
+file_types = list()
+# Video types
+file_types.append(".mp4")
+file_types.append(".webm")
+file_types.append(".3gp")
+file_types.append(".mkv")
+file_types.append(".avi")
+file_types.append("mpg")
+file_types.append(".MOD")
+## Audio types
+#file_types.append(".mp3")
+#file_types.append(".wav")
+
+#Pre-fix
+prefix = ""
+
+#Output file
+playlist_ext = "m3u"
+
+#Output file prefix (to bring to top of files).
+#Comment out to disable the prefix.
+outfile_prefix = "0-"
+
+# Recognised logical operators
+bool_and = "++"
+bool_or = "||" # not implemented, yet
+
+
+
+
 
 #HELPER FUNCTIONS
 ###################
@@ -125,12 +142,41 @@ def matches_AND_list(AND_list, text):
 
     final_result = True
 
-
     for item in AND_list:
         this_result =  item.strip().casefold() in text.casefold()
         final_result = final_result and this_result
 
     return final_result
+
+
+
+def matches_OR_list(OR_list, text):
+    '''Checks if any of the terms in the list 
+    appear in the text.
+    '''
+
+    final_result = False
+
+    for item in OR_list:
+        this_result = item.strip().casefold() in text.casefold()
+        if this_result == True:
+            final_result = this_result
+            break
+    return final_result
+
+
+def matches_regex(regex_string, text):
+    ''' Returns True if text matches 
+    regex regex_string; False otherwise.'''
+
+    result = False
+
+    pattern = re.compile(regex_string)
+    match = re.search(pattern, text)
+
+    if match:
+        result = True
+    return result
         
 ###################
 
@@ -142,6 +188,7 @@ def matches_AND_list(AND_list, text):
 # Initialising variables
 grep_string_only = list()
 grep_string_x = "*"
+regex_string = ".*"
 name_modifiers = "" # Modifier string to attach to name of output file
 
 
@@ -188,7 +235,6 @@ if len(sys.argv) > 1:
             print("Missing 'only' argument")
             exit()
 
-            
 
     #Short-option 'x' same as 'except'
     if "x" in options:
@@ -205,6 +251,23 @@ if len(sys.argv) > 1:
             print("Missing 'except' argument")
             exit()
  
+
+    #Short-option 'e' same as 'regex'
+    if "e" in options:
+        options["regex"] = options["e"]
+        del options["e"]
+    
+    if "regex" in options:
+        try:
+            regex_string = options["regex"]
+            name_modifiers += "_"
+            name_modifiers += "regex"
+            del options["regex"]
+        except:
+            print("Missing 'regex' argument")
+            exit()
+
+
 
     #Short-option 's' same as 'sort'
     if "s" in options:
@@ -267,12 +330,22 @@ else:
             files.append(dirpath + os.sep + filename)
 
 
+# Keep filenames matching regex
+if regex_string != ".*":
+    new_list = list()
+    for filename in files:
+        if matches_regex(regex_string, filename):
+            new_list.append(filename)
+    files = new_list
+
+
 #Remove files that don't match selected types or filters
 ind = 0
 while ind <= len(files) - 1:
     match = False #tracks whether file matched a known extension
     for file_ext in file_types:
         if files[ind].endswith(file_ext) \
+            and matches_regex(regex_string, files[ind]) \
             and matches_AND_list(grep_string_only, files[ind]) \
             and grep_string_x.casefold() not in files[ind].casefold():
             #Note: casefolded strings are used for caseless matching
@@ -282,7 +355,9 @@ while ind <= len(files) - 1:
     
     #No match found, so delete file and move to next
     if match == False: del files[ind]
-    #(no need to change index because files  have shifted)        
+    #(no need to change index because files  have shifted)
+        
+        
     
 #If playlist is empty, exit with message
 if len(files) < 1:

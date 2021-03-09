@@ -7,7 +7,7 @@
 #Help section
 
 help_full = '''
-Playlist Generator v1.1.2 (2021-02-18)
+Playlist Generator v1.1.3 (2021-03-08)
 =======================================
 Generate a playlist of known file types in the current directory
 
@@ -90,7 +90,7 @@ file_types.append(".webm")
 file_types.append(".3gp")
 file_types.append(".mkv")
 file_types.append(".avi")
-file_types.append("mpg")
+file_types.append(".mpg")
 file_types.append(".MOD")
 ## Audio types
 #file_types.append(".mp3")
@@ -123,12 +123,12 @@ def known_file_types():
     #Get script name
     script_name = os.path.split(sys.argv[0].rstrip(os.sep))[-1]
     
-    print("")
+    print('')
     print(script_name,
           "currently looks for the following extensions:")
     for type in file_types:
         print(type)
-    print()
+    print('')
 
 
 #Print help 
@@ -177,6 +177,22 @@ def matches_regex(regex_string, text):
     if match:
         result = True
     return result
+
+
+def reconstruct_command():
+    '''Reconstructs and returns a command 
+    equivalent to what was passed to the script.
+    '''
+
+    #command_string = sys.argv[0] # Uses full path/name of script
+    command_string = "playlist"
+    for option in options:
+        command_string += ' --' + option
+        option_val = options[option]
+        if type(option_val) is str:
+            command_string += ' ' + '"' + option_val + '"'
+
+    return command_string
         
 ###################
 
@@ -230,7 +246,7 @@ if len(sys.argv) > 1:
             grep_string_only = options["only"].split(bool_and)
             name_modifiers += "_"
             name_modifiers += " and" .join(grep_string_only)
-            del options["only"]
+            #del options["only"]
         except:
             print("Missing 'only' argument")
             exit()
@@ -246,7 +262,7 @@ if len(sys.argv) > 1:
             grep_string_x = options["except"]
             name_modifiers += "_"
             name_modifiers += "No_" + grep_string_x
-            del options["except"]
+            #del options["except"]
         except:
             print("Missing 'except' argument")
             exit()
@@ -262,7 +278,7 @@ if len(sys.argv) > 1:
             regex_string = options["regex"]
             name_modifiers += "_"
             name_modifiers += "regex"
-            del options["regex"]
+            #del options["regex"]
         except:
             print("Missing 'regex' argument")
             exit()
@@ -277,7 +293,7 @@ if len(sys.argv) > 1:
     if "sort" in options:        
         try:
             sort_argument = options["sort"]
-            del options["sort"]
+            #del options["sort"]
             
             #Convert integer arguments to int type
             try:
@@ -418,7 +434,7 @@ if outfile_prefix: #add prefix to file name if it exists
 fout = open(playlist_name, "w") #Overwrite
 
 # Save used command as comment in output file
-command_used = " ".join(sys.argv)
+command_used = reconstruct_command()
 comment = "# Output of: " + command_used + "\r\n"
 fout.write(comment)
 
